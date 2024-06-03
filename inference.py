@@ -50,6 +50,8 @@ def test():
         # device = torch.device('cpu')
         net.load_state_dict(torch.load(opt.pth_dir, map_location=device)['state_dict'])
     net.eval()
+
+    print(1/0)
     
     for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
     #     img = Variable(img).cuda()
