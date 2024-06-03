@@ -95,7 +95,7 @@ class InferenceSetLoader(Dataset):
         
         h, w = img.shape
         # img = PadImg(img)
-        img = PadImg(img,times=512)
+        img = PadImg(img,times=16)
         
         img = img[np.newaxis,:]
         
