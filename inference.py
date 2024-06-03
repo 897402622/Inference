@@ -41,11 +41,13 @@ def test():
     test_set = InferenceSetLoader(opt.dataset_dir, opt.train_dataset_name, opt.test_dataset_name, opt.img_norm_cfg)
     test_loader = DataLoader(dataset=test_set, num_workers=1, batch_size=1, shuffle=False)
     
-    net = Net(model_name=opt.model_name, mode='test').cuda()
+    # net = Net(model_name=opt.model_name, mode='test').cuda()
+    net = Net(model_name=opt.model_name, mode='test').cpu()
     try:
         net.load_state_dict(torch.load(opt.pth_dir)['state_dict'])
     except:
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = torch.device('cpu')
         net.load_state_dict(torch.load(opt.pth_dir, map_location=device)['state_dict'])
     net.eval()
     
@@ -63,8 +65,10 @@ def test():
     # for idx_iter, (img, gt_mask, size, img_dir) in enumerate(tbar):
         pred=img
         _,_,h,w=img.shape
-        pred=Variable(pred).cuda()
-        img = Variable(img).cuda().squeeze(0).unsqueeze(0)
+        # pred=Variable(pred).cuda()
+        # img = Variable(img).cuda().squeeze(0).unsqueeze(0)
+        pred=Variable(pred).cpu()
+        img = Variable(img).cpu().squeeze(0).unsqueeze(0)
         for i in range(0, h, 512):
             for j in range(0,w,512):
                 sub_img=img[:,:,i:i+512,j:j+512]
