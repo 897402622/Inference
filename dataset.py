@@ -94,8 +94,8 @@ class InferenceSetLoader(Dataset):
         img = Normalized(np.array(img, dtype=np.float32), self.img_norm_cfg)
         
         h, w = img.shape
-        # img = PadImg(img)
-        img = PadImg(img,times=16)
+        img = PadImg(img)
+        # img = PadImg(img,times=16)
         
         img = img[np.newaxis,:]
         
