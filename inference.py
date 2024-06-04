@@ -50,7 +50,9 @@ def test():
         # device = torch.device('cpu')
         net.load_state_dict(torch.load(opt.pth_dir, map_location=device)['state_dict'])
     net.eval()
+
     
+  
     for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
     #     img = Variable(img).cuda()
     #     pred = net.forward(img)
@@ -66,10 +68,11 @@ def test():
         pred=img
         _,_,h,w=img.shape
         pred=Variable(pred).cuda()
-        img = Variable(img).cuda().squeeze(0).unsqueeze(0)
+        img = Variable(img).cuda()
         # pred=Variable(pred).cpu()
         # img = Variable(img).cpu().squeeze(0).unsqueeze(0)
-        for i in range(0, h, 512):
+        with torch.no_grad():
+            for i in range(0, h, 512):
             for j in range(0,w,512):
                 sub_img=img[:,:,i:i+512,j:j+512]
                 sub_pred=net.forward(sub_img)
@@ -84,9 +87,9 @@ def test():
         # gt_mask = gt_mask[:,:,:size[0],:size[1]]
         # eval_mIoU.update((pred>opt.threshold).cpu(), gt_mask)
         # eval_PD_FA.update((pred[0,0,:,:]>opt.threshold).cpu(), gt_mask[0,0,:,:], size)
-        del pred
-        del img
-        torch.cuda.empty_cache()
+        # del pred
+        # del img
+        # torch.cuda.empty_cache()
     print('Inference Done!')
    
 if __name__ == '__main__':
