@@ -27,7 +27,7 @@ parser.add_argument("--img_norm_cfg_std", default=30.905, type=float,
 parser.add_argument("--save_img", default=True, type=bool, help="save image of or not")
 parser.add_argument("--save_img_dir", type=str, default='./results/', help="path of saved image")
 parser.add_argument("--save_log", type=str, default='./log/', help="path of saved .pth")
-parser.add_argument("--threshold", type=float, default=0.5)
+parser.add_argument("--threshold", type=float, default=0.1)
 
 global opt
 opt = parser.parse_args()
