@@ -52,39 +52,39 @@ def test():
     net.eval()
 
     
-  
-    for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
-    #     img = Variable(img).cuda()
-    #     pred = net.forward(img)
-    #     pred = pred[:,:,:size[0],:size[1]]        
-        ### save img
-        # if opt.save_img == True:
-        #     img_save = transforms.ToPILImage()(((pred[0,0,:,:]>opt.threshold).float()).cpu())
-        #     if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
-        #         os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
-        #     img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
+    with torch.no_grad():
+      for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
+          img = Variable(img).cuda()
+          pred = net.forward(img)
+          pred = pred[:,:,:size[0],:size[1]]        
+          ### save img
+          if opt.save_img == True:
+              img_save = transforms.ToPILImage()(((pred[0,0,:,:]>opt.threshold).float()).cpu())
+              if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
+                  os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
+              img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
     # tbar = tqdm(test_loader)
     # for idx_iter, (img, gt_mask, size, img_dir) in enumerate(tbar):
-        pred=img
-        _,_,h,w=img.shape
-        pred=Variable(pred).cuda()
-        img = Variable(img).cuda()
+        # pred=img
+        # _,_,h,w=img.shape
+        # pred=Variable(pred).cuda()
+        # img = Variable(img).cuda()
         # pred=Variable(pred).cpu()
         # img = Variable(img).cpu().squeeze(0).unsqueeze(0)
-        with torch.no_grad():
-          for i in range(0, h, 512):
-            for j in range(0,w,512):
-                sub_img=img[:,:,i:i+512,j:j+512]
-                sub_pred=net.forward(sub_img)
-                pred[:,:,i:i+512,j:j+512]=sub_pred
+        # with torch.no_grad():
+          # for i in range(0, h, 512):
+            # for j in range(0,w,512):
+                # sub_img=img[:,:,i:i+512,j:j+512]
+                # sub_pred=net.forward(sub_img)
+                # pred[:,:,i:i+512,j:j+512]=sub_pred
             
-        pred = pred[:,:,:size[0],:size[1]]
+        # pred = pred[:,:,:size[0],:size[1]]
       ### save img
-        if opt.save_img == True:
-            img_save = transforms.ToPILImage()(((pred[0,0,:,:]>opt.threshold).float()).cpu())
-            if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
-                os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
-            img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
+        # if opt.save_img == True:
+            # img_save = transforms.ToPILImage()(((pred[0,0,:,:]>opt.threshold).float()).cpu())
+            # if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
+                # os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
+            # img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
         # gt_mask = gt_mask[:,:,:size[0],:size[1]]
         # eval_mIoU.update((pred>opt.threshold).cpu(), gt_mask)
         # eval_PD_FA.update((pred[0,0,:,:]>opt.threshold).cpu(), gt_mask[0,0,:,:], size)
