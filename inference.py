@@ -70,8 +70,8 @@ def test():
         _,_,h,w=img.shape
         pred=Variable(pred).cuda()
         img = Variable(img).cuda()
-        pred=Variable(pred).cpu()
-        img = Variable(img).cpu().squeeze(0).unsqueeze(0)
+        # pred=Variable(pred).cpu()
+        # img = Variable(img).cpu().squeeze(0).unsqueeze(0)
         with torch.no_grad():
           for i in range(0, h, 512):
             for j in range(0,w,512):
