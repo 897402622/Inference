@@ -13,7 +13,7 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 parser = argparse.ArgumentParser(description="PyTorch BasicIRSTD Inference without mask")
 parser.add_argument("--model_names", default=['ISTDU-Net'], nargs='+',
                     help="model_name: 'ACM', 'ALCNet', 'DNANet', 'ISNet', 'UIUNet', 'RDIAN', 'ISTDU-Net', 'U-Net', 'RISTDnet'")
-parser.add_argument("--pth_dirs", default=['WideIRSTD/ISTDU-Net_100.pth.tar'], nargs='+',  help="checkpoint dir, default=None or ['NUDT-SIRST/ACM_400.pth.tar','NUAA-SIRST/ACM_400.pth.tar']")
+parser.add_argument("--pth_dirs", default=['WideIRSTD/ISTDU-Net_240.pth.tar'], nargs='+',  help="checkpoint dir, default=None or ['NUDT-SIRST/ACM_400.pth.tar','NUAA-SIRST/ACM_400.pth.tar']")
 parser.add_argument("--dataset_dir", default='./datasets', type=str, help="train_dataset_dir")
 parser.add_argument("--dataset_names", default=['WideIRSTD'], nargs='+',
                     help="dataset_name: 'NUAA-SIRST', 'NUDT-SIRST', 'IRSTD-1K', 'SIRST3', 'NUDT-SIRST-Sea'")
@@ -73,11 +73,14 @@ def test():
         # pred=Variable(pred).cpu()
         # img = Variable(img).cpu().squeeze(0).unsqueeze(0)
         with torch.no_grad():
-          for i in range(0, h, 512):
-            for j in range(0,w,512):
-                sub_img=img[:,:,i:i+512,j:j+512]
-                sub_pred=net.forward(sub_img)
-                pred[:,:,i:i+512,j:j+512]=sub_pred
+          if size[0] >= 1500 or size[1] >= 1500:
+            pred = torch.zeros(pred.shape)
+          else:
+            for i in range(0, h, 512):
+              for j in range(0,w,512):
+                  sub_img=img[:,:,i:i+512,j:j+512]
+                  sub_pred=net.forward(sub_img)
+                  pred[:,:,i:i+512,j:j+512]=sub_pred
             
         pred = pred[:,:,:size[0],:size[1]]
       ### save img
