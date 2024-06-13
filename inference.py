@@ -73,7 +73,7 @@ def test():
         # pred=Variable(pred).cpu()
         # img = Variable(img).cpu().squeeze(0).unsqueeze(0)
         with torch.no_grad():
-          if size[0] >= 1500 or size[1] >= 1500:
+          if size[0] >= 2048 or size[1] >= 2048:
             pred = torch.zeros(pred.shape)
           else:
             for i in range(0, h, 512):
