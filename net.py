@@ -18,10 +18,11 @@ class Net(nn.Module):
         
         self.cal_loss = SoftIoULoss()
         if model_name == 'DNANet':
-            if mode == 'train':
-                self.model = DNANet(mode='train')
-            else:
-                self.model = DNANet(mode='test')  
+            # if mode == 'train':
+            #     self.model = DNANet(mode='train')
+            # else:
+            #     self.model = DNANet(mode='test')  
+            self.model = DNANet()
         elif model_name == 'DNANet_BY':
             if mode == 'train':
                 self.model = DNAnet_BY(mode='train')
