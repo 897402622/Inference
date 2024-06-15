@@ -134,12 +134,12 @@ def test():
             pred4 = pred4[:,:,:size[0],:size[1]]
             pred5 = pred5[:,:,:size[0],:size[1]]
             pred = torch.max(torch.max(torch.max(torch.max(pred1, pred2), pred3), pred4), pred5)
-      ### save img
-        if opt.save_img == True:
-            img_save = transforms.ToPILImage()(((pred[0,0,:,:]>opt.threshold).float()).cpu())
-            if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
-                os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
-            img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
+          ### save img
+            if opt.save_img == True:
+                img_save = transforms.ToPILImage()(((pred[0,0,:,:]>opt.threshold).float()).cpu())
+                if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
+                    os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
+                img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
         # gt_mask = gt_mask[:,:,:size[0],:size[1]]
         # eval_mIoU.update((pred>opt.threshold).cpu(), gt_mask)
         # eval_PD_FA.update((pred[0,0,:,:]>opt.threshold).cpu(), gt_mask[0,0,:,:], size)
