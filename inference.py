@@ -53,10 +53,10 @@ def test():
     net2.eval()
 
     net3 = Net(model_name='SCTransNet', mode='test').cuda()
-    # net3.load_state_dict(torch.load("./SCTransNet.pth.tar")['state_dict'])
-    missing,unexpected=net3.load_state_dict(torch.load("./SCTransNet.pth.tar")['state_dict'])
-    print(missing)
-    print(unexpected)
+    net3.load_state_dict(torch.load("./SCTransNet.pth.tar")['state_dict'])
+    # missing,unexpected=net3.load_state_dict(torch.load("./SCTransNet.pth.tar")['state_dict'])
+    # print(missing)
+    # print(unexpected)
     net3.eval()
     
     # net3 = Net(config_vit, mode='test', deepsuper=True).cuda()
