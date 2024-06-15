@@ -57,11 +57,11 @@ def test():
     net3.eval()
 
     net4 = Net(model_name='DNANet', mode='test').cuda()
-    net4.load_state_dict(torch.load("./log/WideIRSTD/PRCV/DNANet.pth.tar")['state_dict'])
+    net4.load_state_dict(torch.load("./log/WideIRSTD/DNANet.pth.tar")['state_dict'])
     net4.eval()
 
     net5 = Net(model_name='RDIAN', mode='test').cuda()
-    net5.load_state_dict(torch.load("./log/WideIRSTD/PRCV/RDIAN.pth.tar")['state_dict'])
+    net5.load_state_dict(torch.load("./log/WideIRSTD/RDIAN.pth.tar")['state_dict'])
     net5.eval()
     # try:
     #     net.load_state_dict(torch.load(opt.pth_dir)['state_dict'])
