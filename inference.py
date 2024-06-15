@@ -53,18 +53,18 @@ def test():
     net2.eval()
 
     net3 = Net(model_name='SCTransNet', mode='test').cuda()
-    # net3.load_state_dict(torch.load("./SCTransNet.pth.tar")['state_dict'])
-    # net3.eval()
+    net3.load_state_dict(torch.load("./SCTransNet.pth.tar")['state_dict'])
+    net3.eval()
     # net3 = Net(config_vit, mode='test', deepsuper=True).cuda()
-    state_dict = torch.load("./SCTransNet.pth.tar")
-    # state_dict = torch.load(opt.pth_dir, map_location='cpu')
-    # new_state_dict = OrderedDict()
-    #
-    for k, v in state_dict['state_dict'].items():
-        name = k[6:]  # remove `module.`，表面从第7个key值字符取到最后一个字符，正好去掉了module.
-        new_state_dict[name] = v  # 新字典的key值对应的value为一一对应的值。
-    net.load_state_dict(new_state_dict)
-    net.eval()
+    # state_dict = torch.load("./SCTransNet.pth.tar")
+    # # state_dict = torch.load(opt.pth_dir, map_location='cpu')
+    # # new_state_dict = OrderedDict()
+    # #
+    # for k, v in state_dict['state_dict'].items():
+    #     name = k[6:]  # remove `module.`，表面从第7个key值字符取到最后一个字符，正好去掉了module.
+    #     new_state_dict[name] = v  # 新字典的key值对应的value为一一对应的值。
+    # net.load_state_dict(new_state_dict)
+    # net.eval()
   
     net4 = Net(model_name='DNANet', mode='test').cuda()
     net4.load_state_dict(torch.load("./log/WideIRSTD/DNANet.pth.tar")['state_dict'])
