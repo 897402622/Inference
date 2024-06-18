@@ -13,7 +13,8 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 parser = argparse.ArgumentParser(description="PyTorch BasicIRSTD Inference without mask")
 parser.add_argument("--model_names", default=['ISTDU-Net'], nargs='+',
                     help="model_name: 'ACM', 'ALCNet', 'DNANet', 'ISNet', 'UIUNet', 'RDIAN', 'ISTDU-Net', 'U-Net', 'RISTDnet'")
-parser.add_argument("--pth_dirs", default=['WideIRSTD/ISTDU-Net_140.pth.tar'], nargs='+',  help="checkpoint dir, default=None or ['NUDT-SIRST/ACM_400.pth.tar','NUAA-SIRST/ACM_400.pth.tar']")
+parser.add_argument("--pth_dirs", default=['WideIRSTD/ISTDU-Net_140.pth.tar'], nargs='+',
+                    help="checkpoint dir, default=None or ['NUDT-SIRST/ACM_400.pth.tar','NUAA-SIRST/ACM_400.pth.tar']")
 parser.add_argument("--dataset_dir", default="./datasets/", type=str, help="train_dataset_dir")
 parser.add_argument("--dataset_names", default=['WideIRSTD'], nargs='+',
                     help="dataset_name: 'NUAA-SIRST', 'NUDT-SIRST', 'IRSTD-1K', 'SIRST3', 'NUDT-SIRST-Sea'")
@@ -33,14 +34,15 @@ global opt
 opt = parser.parse_args()
 ## Set img_norm_cfg
 if opt.img_norm_cfg_mean != None and opt.img_norm_cfg_std != None:
-  opt.img_norm_cfg = dict()
-  opt.img_norm_cfg['mean'] = opt.img_norm_cfg_mean
-  opt.img_norm_cfg['std'] = opt.img_norm_cfg_std
-  
-def test(): 
+    opt.img_norm_cfg = dict()
+    opt.img_norm_cfg['mean'] = opt.img_norm_cfg_mean
+    opt.img_norm_cfg['std'] = opt.img_norm_cfg_std
+
+
+def test():
     test_set = InferenceSetLoader(opt.dataset_dir, opt.train_dataset_name, opt.test_dataset_name, opt.img_norm_cfg)
     test_loader = DataLoader(dataset=test_set, num_workers=1, batch_size=1, shuffle=False)
-    
+
     # net = Net(model_name=opt.model_name, mode='test').cuda()
     # net = Net(model_name=opt.model_name, mode='test').cpu()
     net1 = Net(model_name='ISTDU-Net', mode='test').cuda()
@@ -55,7 +57,7 @@ def test():
     net3 = Net(model_name='SCTransNet', mode='test').cuda()
     net3.load_state_dict(torch.load("./SCTransNet.pth.tar")['state_dict'])
     net3.eval()
-  
+
     # net4 = Net(model_name='DNANet', mode='test').cuda()
     # net4.load_state_dict(torch.load("./log/WideIRSTD/DNANet.pth.tar")['state_dict'])
     # net4.eval()
@@ -63,40 +65,40 @@ def test():
     # net5 = Net(model_name='RDIAN', mode='test').cuda()
     # net5.load_state_dict(torch.load("./log/WideIRSTD/RDIAN.pth.tar")['state_dict'])
     # net5.eval()
-    
+
     with torch.no_grad():
         for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
-            pred=img
-            _,_,h,w=img.shape
-            pred=Variable(pred).cuda()
+            pred = img
+            _, _, h, w = img.shape
+            pred = Variable(pred).cuda()
             img = Variable(img).cuda()
             if size[0] > 2048 or size[1] > 2048:
-              pred=torch.zeros(img.shape).cuda()
+                pred = torch.zeros(img.shape).cuda()
             else:
-              for i in range(0, h, 512):
-                  for j in range(0, w, 512):
-                      sub_img = img[:, :, i:i + 512, j:j + 512]
-                      sub_pred1 = net1.forward(sub_img)
-                      sub_pred2 = net2.forward(sub_img)
-                      sub_pred3 = net3.forward(sub_img)
-                      # sub_pred4 = net4.forward(sub_img)
-                      # sub_pred5 = net5.forward(sub_img)
-                      # sub_pred = torch.max(torch.max(torch.max(torch.max(sub_pred1, sub_pred2), sub_pred3), sub_pred4), sub_pred5)
-                      sub_pred = torch.max(torch.max(sub_pred1, sub_pred2), sub_pred3)
-                      pred[:, :, i:i + 512, j:j + 512] = sub_pred
-                pred = pred[:,:,:size[0],:size[1]]
+                for i in range(0, h, 512):
+                    for j in range(0, w, 512):
+                        sub_img = img[:, :, i:i + 512, j:j + 512]
+                        sub_pred1 = net1.forward(sub_img)
+                        sub_pred2 = net2.forward(sub_img)
+                        sub_pred3 = net3.forward(sub_img)
+                        # sub_pred4 = net4.forward(sub_img)
+                        # sub_pred5 = net5.forward(sub_img)
+                        # sub_pred = torch.max(torch.max(torch.max(torch.max(sub_pred1, sub_pred2), sub_pred3), sub_pred4), sub_pred5)
+                        sub_pred = torch.max(torch.max(sub_pred1, sub_pred2), sub_pred3)
+                        pred[:, :, i:i + 512, j:j + 512] = sub_pred
+                pred = pred[:, :, :size[0], :size[1]]
 
-            
-
-          ### save img
+            ### save img
             if opt.save_img == True:
-                img_save = transforms.ToPILImage()(((pred[0,0,:,:]>opt.threshold).float()).cpu())
+                img_save = transforms.ToPILImage()(((pred[0, 0, :, :] > opt.threshold).float()).cpu())
                 if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
                     os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
-                img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
-       
+                img_save.save(
+                    opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')
+
     print('Inference Done!')
-   
+
+
 if __name__ == '__main__':
     opt.f = open(opt.save_log + 'test_' + (time.ctime()).replace(' ', '_').replace(':', '_') + '.txt', 'w')
     if opt.pth_dirs == None:
@@ -132,4 +134,3 @@ if __name__ == '__main__':
                         print('\n')
                         opt.f.write('\n')
         opt.f.close()
-        
