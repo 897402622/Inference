@@ -86,7 +86,7 @@ def test():
                         # sub_pred = torch.max(torch.max(torch.max(torch.max(sub_pred1, sub_pred2), sub_pred3), sub_pred4), sub_pred5)
                         sub_pred = torch.max(torch.max(sub_pred1, sub_pred2), sub_pred3)
                         pred[:, :, i:i + 512, j:j + 512] = sub_pred
-                pred = pred[:, :, :size[0], :size[1]]
+            pred = pred[:, :, :size[0], :size[1]]
 
             ### save img
             if opt.save_img == True:
