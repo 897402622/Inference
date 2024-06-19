@@ -72,10 +72,24 @@ def test():
             _, _, h, w = img.shape
             pred = Variable(pred).cuda()
             img = Variable(img).cuda()
-            if size[0] > 2048 or size[1] > 2048:
-                pred = torch.zeros(img.shape).cuda()
-            else:
-                for i in range(0, h, 512):
+            # if size[0] > 2048 or size[1] > 2048:
+            #     pred = torch.zeros(img.shape).cuda()
+            # else:
+            #     for i in range(0, h, 512):
+            #         for j in range(0, w, 512):
+            #             sub_img = img[:, :, i:i + 512, j:j + 512]
+            #             sub_pred1 = net1.forward(sub_img)
+            #             sub_pred2 = net2.forward(sub_img)
+            #             sub_pred3 = net3.forward(sub_img)
+            #             # sub_pred4 = net4.forward(sub_img)
+            #             # sub_pred5 = net5.forward(sub_img)
+            #             # sub_pred = torch.max(torch.max(torch.max(torch.max(sub_pred1, sub_pred2), sub_pred3), sub_pred4), sub_pred5)
+            #             sub_pred = torch.max(torch.max(sub_pred1, sub_pred2), sub_pred3)
+            #             pred[:, :, i:i + 512, j:j + 512] = sub_pred
+            # pred = pred[:, :, :size[0], :size[1]]
+
+
+            for i in range(0, h, 512):
                     for j in range(0, w, 512):
                         sub_img = img[:, :, i:i + 512, j:j + 512]
                         sub_pred1 = net1.forward(sub_img)
