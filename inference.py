@@ -148,20 +148,25 @@ def test():
                         # pred3[:, :, i:i + 512, j:j + 512] = sub_pred3
                         # pred4[:, :, i:i + 512, j:j + 512] = sub_pred4
                         # pred5[:, :, i:i + 512, j:j + 512] = sub_pred5
-            pred_4_m_v=torch.max(pred3,(((pred1>0.5).float()+(pred2>0.05).float()+(pred4>0.3).float())>1).float())        
+            pred_vote=((
+                    (pred1>0.5).float()+
+                    (pred2>0.05).float()+
+                    (pred3>0.2).float()+
+                    (pred4>0.3).float()
+                )>1).float()        
             # pred1 = pred1[:,:,:size[0],:size[1]]
             # pred2 = pred2[:,:,:size[0],:size[1]]
             # pred3 = pred3[:,:,:size[0],:size[1]]
             # pred4 = pred4[:,:,:size[0],:size[1]]
             # pred5 = pred5[:,:,:size[0],:size[1]]
-            pred = pred_4_m_v[:,:,:size[0],:size[1]]
+            pred = pred_vote[:,:,:size[0],:size[1]]
 
             # pred = torch.max(torch.max(torch.max(torch.max(pred1, pred2), pred3), pred4), pred5)
             # pred = torch.max(torch.max(torch.max(pred1, pred2), pred3), pred4)
 
           ### save img
             if opt.save_img == True:
-                img_save = transforms.ToPILImage()(((pred[0,0,:,:]>0.2).float()).cpu())
+                img_save = transforms.ToPILImage()(((pred[0,0,:,:]>0.5).float()).cpu())
                 if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
                     os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
                 img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
